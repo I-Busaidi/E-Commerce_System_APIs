@@ -1,0 +1,79 @@
+﻿using Azure.Core;
+using E_Commerce_System.DTOs.ProductDTOs;
+using E_Commerce_System.DTOs.UserDTOs;
+using E_Commerce_System.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace E_Commerce_System.Controllers
+{
+    [Authorize(Policy = "HasAdminRole")]
+    [ApiController]
+    [Route("api/[Controller]")]
+    public class ProductController : ControllerBase
+    {
+        private readonly IProductService _productService;
+        private readonly IJwtService _jwtService;
+
+        public ProductController(IProductService productService, IJwtService jwtService)
+        {
+            _productService = productService;
+            _jwtService = jwtService;
+        }
+
+        [HttpPost("Add-Product")]
+        public IActionResult AddProduct([FromBody] ProductInputDTO productInputDTO)
+        {
+            try
+            {
+                var product = _productService.AddProduct(productInputDTO);
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity(ex.Message);
+            }
+        }
+
+        [HttpPut("Update-Product/{id}")]
+        public IActionResult UpdateProduct(int id, [FromBody] ProductInputDTO productInputDTO)
+        {
+            try
+            {
+                var product = _productService.UpdateProduct(productInputDTO, id);
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return UnprocessableEntity(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetAllProducts")]
+        public IActionResult GetAllProducts()
+        {
+            try
+            {
+                var products = _productService.GetAllProducts();
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+
+        [NonAction]
+        public string GetToken()
+        {
+            var token = Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new UnauthorizedAccessException("Token unavailable or expired");
+            }
+
+            return token;
+        }
+    }
+}

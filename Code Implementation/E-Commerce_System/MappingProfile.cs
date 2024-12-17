@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using E_Commerce_System.DTOs.ProductDTOs;
 using E_Commerce_System.DTOs.UserDTOs;
 using E_Commerce_System.Models;
 namespace E_Commerce_System
@@ -9,6 +10,9 @@ namespace E_Commerce_System
         {
             CreateMap<UserInputDTO, User>();
             CreateMap<User, UserOutputDTO>();
+
+            CreateMap<ProductInputDTO, Product>();
+            CreateMap<Product, ProductOutputDTO>();
         }
     }
 }

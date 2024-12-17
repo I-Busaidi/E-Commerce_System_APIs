@@ -1,10 +1,13 @@
 
+using E_Commerce_System.Authorization;
 using E_Commerce_System.Repositories;
 using E_Commerce_System.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 namespace E_Commerce_System
@@ -22,6 +25,8 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
 
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
 
             builder.Services.AddScoped<IJwtService, JwtService>();
 
@@ -51,6 +56,16 @@ namespace E_Commerce_System
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
                     };
                 });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("HasAdminRole", policy =>
+                {
+                    policy.Requirements.Add(new ClaimRequirement(ClaimTypes.Role, "admin"));
+                });
+            });
+
+            builder.Services.AddSingleton<IAuthorizationHandler, ClaimAuthorizationHandler>();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
