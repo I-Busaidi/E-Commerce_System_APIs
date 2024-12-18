@@ -60,7 +60,22 @@ namespace E_Commerce_System.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("GetProductById/{id}")]
+        public IActionResult GetProductById(int id)
+        {
+            try
+            {
+                var product = _productService.GetProductById(id);
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
             }
         }
 
