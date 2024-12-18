@@ -1,0 +1,27 @@
+*************************ONLY FOR LOGIN AND TESTING PURPOSE************************
+Users:
+
+Name          | Email                     | Password     | Phone    | Role        |
+==============|===========================|==============|==========|=============|
+              |                           |              |          |             |
+Alice Johnson | alice.johnson@example.com | Password123! | 55521234 | admin       |
+              |                           |              |          |             |
+Bob Smith     | bob.smith@example.com     | Password456! | 55575678 | normal user |
+              |                           |              |          |             |
+Charlie Brown | charlie.brown@example.com | Password789! | 55598765 | normal user |
+              |                           |              |          |             |
+David White   | david.white@example.com   | Password101! | 55504321 | admin       |
+              |                           |              |          |             |
+Eva Green     | eva.green@example.com     | Password112! | 55536789 | normal user |
+              |                           |              |          |             |
+Frank Miller  | frank.miller@example.com  | Password131! | 55561357 | normal user |
+              |                           |              |          |             |
+Grace Lee     | grace.lee@example.com     | Password415! | 55572468 | normal user |
+              |                           |              |          |             |
+Helen Adams   | helen.adams@example.com   | Password161! | 55593690 | admin       |
+              |                           |              |          |             |
+Ian Clark     | ian.clark@example.com     | Password718! | 55564820 | normal user |
+              |                           |              |          |             |
+Jackie Taylor | jackie.taylor@example.com | Password920! | 55515923 | normal user |
+              |                           |              |          |             |
+----------------------------------------------------------------------------------|
