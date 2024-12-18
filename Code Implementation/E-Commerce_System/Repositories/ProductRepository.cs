@@ -37,7 +37,6 @@ namespace E_Commerce_System.Repositories
         public void StockUpdateProduct(Product product)
         {
             _context.Products.Update(product);
-            _context.SaveChanges();
         }
 
         public void DeleteProduct(Product product)

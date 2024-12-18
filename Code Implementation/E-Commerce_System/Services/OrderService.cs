@@ -24,30 +24,88 @@ namespace E_Commerce_System.Services
             _context = context;
         }
 
-        //public (OrderOutputDTO order, List<OrderProductOutputDTO> orderProducts) ConfirmCheckout(int userId)
-        //{
-        //    User user = _userService.GetUserByIdWithRelatedData(userId);
-        //    if (user.userCart.Count == 0)
-        //    {
-        //        throw new InvalidOperationException("Cart is empty");
-        //    }
-        //    decimal orderSum = 0;
-        //    foreach(var item in user.userCart)
-        //    {
-        //        if (item.product.productStock < item.quantity)
-        //        {
-        //            throw new InvalidOperationException($"{item.product.productName} quantity exceeds available stock");
-        //        }
-        //        else
-        //        {
-        //            orderSum += item.quantity * item.product.productPrice;
-        //        }
-        //    }
+        public (string productName, int quantity, decimal productSum) AddItemToCart(int userId, int productId, int quantity)
+        {
+            var user = _userService.GetUserByIdWithRelatedData(userId);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+            var product = _productService.GetProductByIdWithRelatedData(productId);
+            if (product == null)
+            {
+                throw new KeyNotFoundException("Product not found");
+            }
+            if (product.productStock < quantity)
+            {
+                throw new InvalidOperationException("Product stock insufficient");
+            }
 
+            user.userCart.Add((product, quantity));
+            return (product.productName, quantity, product.productPrice * quantity);
+        }
 
-        //}
+        public (OrderOutputDTO order, List<OrderProductOutputDTO> orderProducts) ConfirmCheckout(int userId)
+        {
+            User user = _userService.GetUserByIdWithRelatedData(userId);
+            if (user.userCart.Count == 0)
+            {
+                throw new InvalidOperationException("Cart is empty");
+            }
+            List<OrderProductInputDTO> orderProducts = new List<OrderProductInputDTO>();
+            decimal orderSum = 0;
+            foreach (var item in user.userCart)
+            {
+                if (item.product.productStock < item.quantity)
+                {
+                    throw new InvalidOperationException($"{item.product.productName} quantity exceeds available stock");
+                }
+                else
+                {
+                    orderSum += (item.quantity * item.product.productPrice);
+                }
+            }
 
-        public (OrderOutputDTO order, List<OrderProductOutputDTO> orderProducts) AddOrder(OrderInputDTO orderInputDTO, List<OrderProductInputDTO> orderProductsInputDTO)
+            // transaction
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var order = AddOrder(new OrderInputDTO
+                    {
+                        orderTotalAmount = orderSum,
+                        userId = userId,
+                    });
+
+                    foreach(var item in user.userCart)
+                    {
+                        _productService.UpdateProductStock(item.product, item.quantity * -1);
+                        orderProducts.Add(new OrderProductInputDTO
+                        {
+                            orderId = order.orderId,
+                            productId = item.product.productId,
+                            productQuantity = item.quantity
+                        });
+                    }
+
+                    var orderedProducts = _orderProductsService.AddProducts(orderProducts);
+
+                    _context.SaveChanges();
+                    transaction.Commit();
+
+                    user.userCart.Clear();
+
+                    return (order, orderedProducts);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    throw new InvalidOperationException("An error occured while checking out");
+                }
+            }
+        }
+
+        public OrderOutputDTO AddOrder(OrderInputDTO orderInputDTO)
         {
             if (orderInputDTO.orderTotalAmount <= 0)
             {
@@ -60,9 +118,8 @@ namespace E_Commerce_System.Services
             }
             Order orderInput = _mapper.Map<Order>(orderInputDTO);
             OrderOutputDTO orderOutput = _mapper.Map<OrderOutputDTO>(_orderRepository.AddOrder(orderInput));
-            List<OrderProductOutputDTO> orderProductsOutput = _orderProductsService.AddProducts(orderProductsInputDTO);
 
-            return (orderOutput, orderProductsOutput);
+            return orderOutput;
         }
 
         public List<OrderOutputDTO> GetUserOrders(int id)

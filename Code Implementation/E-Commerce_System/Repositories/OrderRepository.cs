@@ -29,7 +29,6 @@ namespace E_Commerce_System.Repositories
         public Order AddOrder(Order order)
         {
             _context.Orders.Add(order);
-            _context.SaveChanges();
             return order;
         }
 

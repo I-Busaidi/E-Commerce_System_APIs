@@ -13,7 +13,6 @@ namespace E_Commerce_System.Repositories
         public List<OrderProducts> AddOrderProduct(List<OrderProducts> products)
         {
             _context.OrdersProducts.AddRange(products);
-            _context.SaveChanges();
             return products;
         }
 
