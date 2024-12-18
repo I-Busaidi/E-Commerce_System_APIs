@@ -51,11 +51,23 @@ namespace E_Commerce_System.Controllers
 
         [AllowAnonymous]
         [HttpGet("GetAllProducts")]
-        public IActionResult GetAllProducts()
+        public IActionResult GetAllProducts(
+            int pageNumber = 1,
+            int pageSize = 1,
+            string searchName = "",
+            decimal minPrice = 0,
+            decimal maxPrice = int.MaxValue)
         {
             try
             {
-                var products = _productService.GetAllProducts();
+                var products = _productService.GetAllProducts()
+                    .Where(p => p.productName.ToLower().Trim().Contains(searchName.ToLower().Trim())
+                    & p.productPrice >= minPrice & p.productPrice <= maxPrice)
+                    .Skip((pageNumber - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList();
+
+
                 return Ok(products);
             }
             catch (Exception ex)
