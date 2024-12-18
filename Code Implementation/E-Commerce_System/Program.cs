@@ -28,6 +28,12 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductService, ProductService>();
 
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+
+
+            builder.Services.AddScoped<IOrderProductsRepository, OrderProductsRepository>();
+            builder.Services.AddScoped<IOrderProductsService, OrderProductsService>();
+
             builder.Services.AddScoped<IJwtService, JwtService>();
 
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);

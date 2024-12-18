@@ -20,7 +20,6 @@ namespace E_Commerce_System
 
 
             CreateMap<OrderInputDTO, Order>();
-
             CreateMap<Order, OrderOutputDTO>()
                 .ForMember(dest => dest.userName, opt => opt.MapFrom((src, dest) => GetUserNameFromId(src.userId)));
 

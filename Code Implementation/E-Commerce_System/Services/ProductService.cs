@@ -84,6 +84,12 @@ namespace E_Commerce_System.Services
             return productOutputDTO;
         }
 
+        public void UpdateProductStock(Product product, int amount)
+        {
+            product.productStock += amount;
+            _productRepository.StockUpdateProduct(product);
+        }
+
         public ProductOutputDTO UpdateProduct(ProductInputDTO productInputDTO, int id)
         {
             if (productInputDTO == null)

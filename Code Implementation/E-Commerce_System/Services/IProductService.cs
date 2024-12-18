@@ -11,5 +11,6 @@ namespace E_Commerce_System.Services
         ProductOutputDTO GetProductById(int id);
         Product GetProductByIdWithRelatedData(int id);
         ProductOutputDTO UpdateProduct(ProductInputDTO productInputDTO, int id);
+        void UpdateProductStock(Product product, int amount);
     }
 }

@@ -10,11 +10,11 @@ namespace E_Commerce_System.Repositories
             _context = context;
         }
 
-        public int AddOrderProduct(List<OrderProducts> products)
+        public List<OrderProducts> AddOrderProduct(List<OrderProducts> products)
         {
             _context.OrdersProducts.AddRange(products);
             _context.SaveChanges();
-            return products.Count();
+            return products;
         }
 
         public void DeleteOrderProduct(OrderProducts orderProduct)

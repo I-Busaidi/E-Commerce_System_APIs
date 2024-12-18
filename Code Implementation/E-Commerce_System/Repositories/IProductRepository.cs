@@ -9,5 +9,6 @@ namespace E_Commerce_System.Repositories
         IEnumerable<Product> GetAllProducts();
         Product GetProductById(int id);
         Product UpdateProduct(Product product);
+        void StockUpdateProduct(Product product);
     }
 }
