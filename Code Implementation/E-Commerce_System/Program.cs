@@ -29,7 +29,7 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IProductService, ProductService>();
 
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             builder.Services.AddScoped<IOrderProductsRepository, OrderProductsRepository>();
             builder.Services.AddScoped<IOrderProductsService, OrderProductsService>();

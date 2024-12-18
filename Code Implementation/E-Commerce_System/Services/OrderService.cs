@@ -5,7 +5,7 @@ using E_Commerce_System.Repositories;
 
 namespace E_Commerce_System.Services
 {
-    public class OrderService
+    public class OrderService : IOrderService
     {
         private readonly ApplicationDbContext _context;
         private readonly IOrderRepository _orderRepository;
@@ -24,14 +24,14 @@ namespace E_Commerce_System.Services
             _context = context;
         }
 
-        public (string productName, int quantity, decimal productSum) AddItemToCart(int userId, int productId, int quantity)
+        public (string productName, int quantity, decimal productSum) AddItemToCart(int userId, string productName, int quantity)
         {
             var user = _userService.GetUserByIdWithRelatedData(userId);
             if (user == null)
             {
                 throw new KeyNotFoundException("User not found");
             }
-            var product = _productService.GetProductByIdWithRelatedData(productId);
+            var product = _productService.GetProductByName(productName);
             if (product == null)
             {
                 throw new KeyNotFoundException("Product not found");
@@ -77,7 +77,7 @@ namespace E_Commerce_System.Services
                         userId = userId,
                     });
 
-                    foreach(var item in user.userCart)
+                    foreach (var item in user.userCart)
                     {
                         _productService.UpdateProductStock(item.product, item.quantity * -1);
                         orderProducts.Add(new OrderProductInputDTO
@@ -100,7 +100,7 @@ namespace E_Commerce_System.Services
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    throw new InvalidOperationException("An error occured while checking out");
+                    throw new InvalidOperationException("An error occured while checking out "+ ex.Message.ToString());
                 }
             }
         }
@@ -136,10 +136,24 @@ namespace E_Commerce_System.Services
 
             return _mapper.Map<List<OrderOutputDTO>>(userOrders);
         }
-
-        public (OrderOutputDTO order, List<OrderProductOutputDTO> orderProducts) GetOrderDetails(int id)
+        public List<Order> GetUserOrdersWithRelatedData(int id)
         {
-            Order order = _orderRepository.GetOrderById(id);
+            if (id == 0)
+            {
+                throw new KeyNotFoundException("User not found");
+            }
+            List<Order> userOrders = _orderRepository.GetOrdersByUserId(id).ToList();
+            if (userOrders.Count == 0 || userOrders == null)
+            {
+                throw new InvalidOperationException("No orders made by this user");
+            }
+
+            return userOrders;
+        }
+
+        public (OrderOutputDTO order, List<OrderProductOutputDTO> orderProducts) GetOrderDetails(int orderId, int userId)
+        {
+            Order? order = GetUserOrdersWithRelatedData(userId).FirstOrDefault(o => o.orderId == orderId);
             if (order == null)
             {
                 throw new KeyNotFoundException("Order not found");

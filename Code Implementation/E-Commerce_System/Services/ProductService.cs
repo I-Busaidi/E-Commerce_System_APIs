@@ -37,6 +37,18 @@ namespace E_Commerce_System.Services
             return products;
         }
 
+        public Product GetProductByName(string productName)
+        {
+            var product = _productRepository.GetAllProducts()
+                .FirstOrDefault(p => p.productName == productName);
+            if (product == null)
+            {
+                throw new KeyNotFoundException("Product not found");
+            }
+
+            return product;
+        }
+
         public ProductOutputDTO GetProductById(int id)
         {
             Product product = GetProductByIdWithRelatedData(id);

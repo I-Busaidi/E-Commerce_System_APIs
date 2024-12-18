@@ -44,6 +44,6 @@ namespace E_Commerce_System.Models
         public virtual ICollection<Review> ReviewsByUser { get; set; } = new List<Review>();
 
         [NotMapped]
-        public List<(Product product, int quantity)>? userCart { get; set; } = new List<(Product product, int quantity)>();
+        public virtual List<(Product product, int quantity)> userCart { get; set; } = new List<(Product product, int quantity)>();
     }
 }

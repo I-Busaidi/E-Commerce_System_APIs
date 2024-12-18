@@ -78,6 +78,21 @@ namespace E_Commerce_System.Controllers
             }
         }
 
+        [HttpGet("ViewCart")]
+        public IActionResult ViewCart()
+        {
+            try
+            {
+                int userId = _jwtService.DecodeToken(GetToken()).userId;
+                var cart = _userService.GetCartDetails(userId);
+                return Ok(cart);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [NonAction]
         public string GetToken()
         {

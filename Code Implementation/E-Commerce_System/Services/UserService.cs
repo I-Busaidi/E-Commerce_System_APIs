@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using E_Commerce_System.DTOs.ProductDTOs;
 using E_Commerce_System.DTOs.UserDTOs;
 using E_Commerce_System.Models;
 using E_Commerce_System.Repositories;
@@ -18,6 +19,30 @@ namespace E_Commerce_System.Services
         {
             _userRepository = userRepository;
             _mapper = mapper;
+        }
+
+        public (List<(string productName, int quantity, decimal productSum)> cart,decimal grandTotal) GetCartDetails(int id)
+        {
+            List<(string, int, decimal)> cart = new List<(string, int, decimal)>();
+            decimal grandTotal = 0;
+            User user = _userRepository.GetUserById(id);
+            if (user == null)
+            {
+                throw new KeyNotFoundException("Could not find user");
+            }
+
+            if (user.userCart.Count == 0)
+            {
+                throw new InvalidOperationException("User cart is empty");
+            }
+
+            foreach (var item in user.userCart)
+            {
+                cart.Add((item.product.productName, item.quantity, item.quantity * item.product.productPrice));
+                grandTotal += item.quantity * item.product.productPrice;
+            }
+
+            return (cart, grandTotal);
         }
 
         public List<UserOutputDTO> GetAllUsers()
