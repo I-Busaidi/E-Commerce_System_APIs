@@ -35,6 +35,8 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IOrderProductsRepository, OrderProductsRepository>();
             builder.Services.AddScoped<IOrderProductsService, OrderProductsService>();
 
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
             builder.Services.AddScoped<IJwtService, JwtService>();
 
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -43,6 +45,8 @@ namespace E_Commerce_System
             builder.Services.AddScoped<ProductNameResolver>();
             builder.Services.AddScoped<ProductPriceResolver>();
             builder.Services.AddScoped<UserNameResolver>();
+            builder.Services.AddScoped<ReviewProductNameResolver>();
+            builder.Services.AddScoped<ReviewUserNameResolver>();
 
             builder.Services.AddHttpContextAccessor();
 

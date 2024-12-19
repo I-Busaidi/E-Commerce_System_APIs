@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using E_Commerce_System.DTOs.OrderDTOs;
+using E_Commerce_System.DTOs.ReviewDTOs;
 using E_Commerce_System.Models;
 using E_Commerce_System.Services;
 
@@ -32,6 +33,22 @@ namespace E_Commerce_System.CustomValueResolvers
         {
             var product = _productService.GetProductById(source.productId);
             return product?.productPrice ?? 0m;
+        }
+    }
+
+    public class ReviewProductNameResolver : IValueResolver<Review, ReviewOutputDTO, string>
+    {
+        private readonly IProductService _productService;
+
+        public ReviewProductNameResolver(IProductService productService)
+        {
+            _productService = productService;
+        }
+
+        public string Resolve(Review source, ReviewOutputDTO destination, string member, ResolutionContext context)
+        {
+            var product = _productService.GetProductById(source.productId);
+            return product?.productName ?? "Unknown";
         }
     }
 }
