@@ -14,35 +14,13 @@ namespace E_Commerce_System.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IMapper _mapper;
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _mapper = mapper;
-        }
-
-        public (List<(string productName, int quantity, decimal productSum)> cart,decimal grandTotal) GetCartDetails(int id)
-        {
-            List<(string, int, decimal)> cart = new List<(string, int, decimal)>();
-            decimal grandTotal = 0;
-            User user = _userRepository.GetUserById(id);
-            if (user == null)
-            {
-                throw new KeyNotFoundException("Could not find user");
-            }
-
-            if (user.userCart.Count == 0)
-            {
-                throw new InvalidOperationException("User cart is empty");
-            }
-
-            foreach (var item in user.userCart)
-            {
-                cart.Add((item.product.productName, item.quantity, item.quantity * item.product.productPrice));
-                grandTotal += item.quantity * item.product.productPrice;
-            }
-
-            return (cart, grandTotal);
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public List<UserOutputDTO> GetAllUsers()

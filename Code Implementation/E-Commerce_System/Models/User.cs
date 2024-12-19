@@ -42,8 +42,5 @@ namespace E_Commerce_System.Models
 
         [InverseProperty("Reviewer")]
         public virtual ICollection<Review> ReviewsByUser { get; set; } = new List<Review>();
-
-        [NotMapped]
-        public virtual List<(Product product, int quantity)> userCart { get; set; } = new List<(Product product, int quantity)>();
     }
 }

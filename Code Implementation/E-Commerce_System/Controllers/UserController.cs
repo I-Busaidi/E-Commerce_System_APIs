@@ -1,7 +1,9 @@
 ﻿using E_Commerce_System.DTOs.UserDTOs;
+using E_Commerce_System.Models;
 using E_Commerce_System.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -83,8 +85,7 @@ namespace E_Commerce_System.Controllers
         {
             try
             {
-                int userId = _jwtService.DecodeToken(GetToken()).userId;
-                var cart = _userService.GetCartDetails(userId);
+                var cart = HttpContext.Session.GetObjectFromJson<List<(Product product, int quantity)>>("Cart") ?? new List<(Product, int)>();
                 return Ok(cart);
             }
             catch (Exception ex)

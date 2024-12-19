@@ -16,15 +16,15 @@ namespace E_Commerce_System.Services
             _mapper = mapper;
         }
 
-        public List<OrderProductOutputDTO> AddProducts(List<OrderProductInputDTO> orderProductsInputDTO)
+        public OrderProductOutputDTO AddProducts(OrderProducts orderProductsInput)
         {
-            List<OrderProducts> orderProductsInput = _mapper.Map<List<OrderProducts>>(orderProductsInputDTO);
-            if (orderProductsInput == null || orderProductsInput.Count == 0)
+            
+            if (orderProductsInput == null)
             {
                 throw new InvalidOperationException("Order products not found");
             }
 
-            return _mapper.Map<List<OrderProductOutputDTO>>(_orderProductsRepository.AddOrderProduct(orderProductsInput));
+            return _mapper.Map<OrderProductOutputDTO>(_orderProductsRepository.AddOrderProduct(orderProductsInput));
         }
     }
 }

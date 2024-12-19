@@ -1,5 +1,6 @@
 
 using E_Commerce_System.Authorization;
+using E_Commerce_System.CustomValueResolvers;
 using E_Commerce_System.Repositories;
 using E_Commerce_System.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -36,9 +37,22 @@ namespace E_Commerce_System
 
             builder.Services.AddScoped<IJwtService, JwtService>();
 
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+            builder.Services.AddScoped<ProductNameResolver>();
+            builder.Services.AddScoped<ProductPriceResolver>();
+            builder.Services.AddScoped<UserNameResolver>();
 
             builder.Services.AddHttpContextAccessor();
+
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             builder.Services.AddControllers();
 
@@ -111,7 +125,7 @@ namespace E_Commerce_System
             }
 
             app.UseHttpsRedirection();
-
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 
