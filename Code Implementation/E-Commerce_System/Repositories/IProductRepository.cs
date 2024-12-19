@@ -10,5 +10,6 @@ namespace E_Commerce_System.Repositories
         Product GetProductById(int id);
         Product UpdateProduct(Product product);
         void StockUpdateProduct(Product product);
+        void RatingUpdateProduct(Product product);
     }
 }

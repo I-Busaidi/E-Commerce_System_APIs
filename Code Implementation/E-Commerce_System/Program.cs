@@ -36,6 +36,7 @@ namespace E_Commerce_System
             builder.Services.AddScoped<IOrderProductsService, OrderProductsService>();
 
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+            builder.Services.AddScoped<IReviewService, ReviewService>();
 
             builder.Services.AddScoped<IJwtService, JwtService>();
 

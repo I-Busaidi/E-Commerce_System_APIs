@@ -13,5 +13,6 @@ namespace E_Commerce_System.Services
         ProductOutputDTO UpdateProduct(ProductInputDTO productInputDTO, int id);
         void UpdateProductStock(Product product, int amount);
         Product GetProductByName(string productName);
+        void UpdateProductRating(Product product, decimal avgRating);
     }
 }

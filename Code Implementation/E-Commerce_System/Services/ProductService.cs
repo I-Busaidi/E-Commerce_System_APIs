@@ -102,6 +102,12 @@ namespace E_Commerce_System.Services
             _productRepository.StockUpdateProduct(product);
         }
 
+        public void UpdateProductRating(Product product, decimal avgRating)
+        {
+            product.productRating = avgRating;
+            _productRepository.RatingUpdateProduct(product);
+        }
+
         public ProductOutputDTO UpdateProduct(ProductInputDTO productInputDTO, int id)
         {
             if (productInputDTO == null)
