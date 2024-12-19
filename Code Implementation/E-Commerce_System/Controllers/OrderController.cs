@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using E_Commerce_System.DTOs.OrderDTOs;
 using E_Commerce_System.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,12 @@ namespace E_Commerce_System.Controllers
             {
                 int userId = _jwtService.DecodeToken(GetToken()).userId;
                 var order = _orderService.GetOrderDetails(orderId, userId);
-                return Ok(order);
+                var orderDetails = new DetailedOrderDTO
+                {
+                    order = order.order,
+                    orderProducts = order.orderProducts
+                };
+                return Ok(orderDetails);
             }
             catch (Exception ex)
             {

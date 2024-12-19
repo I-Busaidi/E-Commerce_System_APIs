@@ -7,5 +7,6 @@ namespace E_Commerce_System.Repositories
         OrderProducts AddOrderProduct(OrderProducts product);
         void DeleteOrderProduct(OrderProducts orderProduct);
         void UpdateOrderProduct(OrderProducts orderProduct);
+        IEnumerable<OrderProducts> GetOrdersProductsById(int id);
     }
 }

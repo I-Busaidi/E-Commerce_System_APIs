@@ -26,5 +26,18 @@ namespace E_Commerce_System.Services
 
             return _mapper.Map<OrderProductOutputDTO>(_orderProductsRepository.AddOrderProduct(orderProductsInput));
         }
+
+        public List<OrderProductOutputDTO> GetOrderProducts(int id)
+        {
+            var orderProducts = _orderProductsRepository.GetOrdersProductsById(id).ToList();
+            if (orderProducts == null)
+            {
+                throw new InvalidOperationException("No order products found");
+            }
+
+            List<OrderProductOutputDTO> orderProductsOutput = _mapper.Map<List<OrderProductOutputDTO>>(orderProducts);
+
+            return orderProductsOutput;
+        }
     }
 }

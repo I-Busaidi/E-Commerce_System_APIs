@@ -6,5 +6,6 @@ namespace E_Commerce_System.Services
     public interface IOrderProductsService
     {
         OrderProductOutputDTO AddProducts(OrderProducts orderProductsInput);
+        List<OrderProductOutputDTO> GetOrderProducts(int id);
     }
 }

@@ -16,6 +16,11 @@ namespace E_Commerce_System.Repositories
             return product;
         }
 
+        public IEnumerable<OrderProducts> GetOrdersProductsById(int id)
+        {
+            return _context.OrdersProducts.Where(op => op.orderId == id);
+        }
+
         public void DeleteOrderProduct(OrderProducts orderProduct)
         {
             _context.OrdersProducts.Remove(orderProduct);

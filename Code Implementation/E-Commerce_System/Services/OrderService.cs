@@ -167,12 +167,9 @@ namespace E_Commerce_System.Services
             {
                 throw new KeyNotFoundException("Order not found");
             }
-            if (order.OrderProducts.Count == 0)
-            {
-                throw new InvalidDataException("Unable to retrieve order details");
-            }
+
+            List<OrderProductOutputDTO> orderProductsOutput = _orderProductsService.GetOrderProducts(order.orderId);
             OrderOutputDTO orderOutput = _mapper.Map<OrderOutputDTO>(order);
-            List<OrderProductOutputDTO> orderProductsOutput = _mapper.Map<List<OrderProductOutputDTO>>(order.OrderProducts);
 
             return (orderOutput, orderProductsOutput);
         }
