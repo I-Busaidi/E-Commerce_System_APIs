@@ -68,7 +68,7 @@ namespace E_Commerce_System.Controllers
             }
         }
 
-        [HttpPost("UpdateReview")]
+        [HttpPut("UpdateReview")]
         public IActionResult UpdateReview([FromBody] ReviewInputWithProductNameDTO review)
         {
             try
@@ -83,7 +83,7 @@ namespace E_Commerce_System.Controllers
             }
         }
 
-        [HttpPost("DeleteReview/{productName}")]
+        [HttpDelete("DeleteReview/{productName}")]
         public IActionResult DeleteProductReview(string productName)
         {
             try
