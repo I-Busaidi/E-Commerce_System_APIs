@@ -43,7 +43,9 @@ namespace E_Commerce_System.Services
             var existingItem = cart.FirstOrDefault(c => c.product.productName == productName );
             if (existingItem.product != null)
             {
+                cart.Remove(existingItem);
                 existingItem.quantity += quantity;
+                cart.Add(existingItem);
             }
             else
             {
