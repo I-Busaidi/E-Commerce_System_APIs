@@ -27,6 +27,10 @@ namespace E_Commerce_System.Controllers
             {
                 int userId = _jwtService.DecodeToken(GetToken()).userId;
                 var orderDetails = _orderService.ConfirmCheckout(userId);
+                foreach (var product in orderDetails.orderProducts)
+                {
+                    product.orderId = orderDetails.order.orderId;
+                }
                 DetailedOrderDTO output = new DetailedOrderDTO
                 {
                     order = orderDetails.order,
