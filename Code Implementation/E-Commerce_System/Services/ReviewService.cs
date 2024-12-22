@@ -238,10 +238,18 @@ namespace E_Commerce_System.Services
 
             int deletedReviewId = _reviewRepository.DeleteReview(existingReview);
 
-            double newAvgProductRating = _reviewRepository.GetProductReviews(product.productId)
-                .Average(r => r.rating);
+            double? newAvgProductRating;
 
-            _productService.UpdateProductRating(product, (decimal)newAvgProductRating);
+            if (_reviewRepository.GetProductReviews(product.productId).Any())
+            {
+                newAvgProductRating = _reviewRepository.GetProductReviews(product.productId).Average(r => r.rating);
+            }
+            else
+            {
+                newAvgProductRating = null;
+            }
+
+            _productService.UpdateProductRating(product, (decimal?)newAvgProductRating);
 
             return deletedReviewId;
         }
