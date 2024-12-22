@@ -27,7 +27,12 @@ namespace E_Commerce_System.Controllers
             {
                 int userId = _jwtService.DecodeToken(GetToken()).userId;
                 var orderDetails = _orderService.ConfirmCheckout(userId);
-                return Created(string.Empty, $"Order: \n{orderDetails.order} \nDetails:\n{orderDetails.orderProducts}");
+                DetailedOrderDTO output = new DetailedOrderDTO
+                {
+                    order = orderDetails.order,
+                    orderProducts = orderDetails.orderProducts
+                };
+                return Created(string.Empty, output);
             }
             catch (Exception ex)
             {
