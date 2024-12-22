@@ -59,6 +59,21 @@ namespace E_Commerce_System.Controllers
             }
         }
 
+        [HttpDelete("RemoveItemFromCart/{productName}")]
+        public IActionResult DeleteItemFromCart(string productName)
+        {
+            try
+            {
+                int userId = _jwtService.DecodeToken(GetToken()).userId;
+                string itemName = _orderService.RemoveItemFromCart(userId, productName);
+                return Ok($"Product \"{itemName}\" removed from cart");
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [HttpGet("GetUserOrders")]
         public IActionResult GetUserOrders()
         {

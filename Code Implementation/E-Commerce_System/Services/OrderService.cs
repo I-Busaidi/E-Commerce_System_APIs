@@ -57,6 +57,25 @@ namespace E_Commerce_System.Services
             return (product.productName, quantity, product.productPrice * quantity);
         }
 
+        public string RemoveItemFromCart(int userId, string productName)
+        {
+            var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<(Product product, int quantity)>>("Cart") ?? new List<(Product, int)>();
+
+            var existingItem = cart.FirstOrDefault(c => c.product.productName == productName);
+            if (existingItem.product != null)
+            {
+                cart.Remove(existingItem);
+            }
+            else
+            {
+                throw new InvalidOperationException("Product not found");
+            }
+
+            _httpContextAccessor.HttpContext.Session.SetObjectAsJson("Cart", cart);
+
+            return productName;
+        }
+
         public (OrderOutputDTO order, List<OrderProductOutputDTO> orderProducts) ConfirmCheckout(int userId)
         {
             var cart = _httpContextAccessor.HttpContext.Session.GetObjectFromJson<List<(Product product, int quantity)>>("Cart");

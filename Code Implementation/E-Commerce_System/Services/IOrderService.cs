@@ -11,5 +11,6 @@ namespace E_Commerce_System.Services
         (OrderOutputDTO order, List<OrderProductOutputDTO> orderProducts) GetOrderDetails(int orderId, int userId);
         List<OrderOutputDTO> GetUserOrders(int id);
         List<Order> GetUserOrdersWithRelatedData(int id);
+        string RemoveItemFromCart(int userId, string productName);
     }
 }
