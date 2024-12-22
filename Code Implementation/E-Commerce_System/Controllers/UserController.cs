@@ -1,4 +1,5 @@
-﻿using E_Commerce_System.DTOs.UserDTOs;
+﻿using E_Commerce_System.DTOs.OrderDTOs;
+using E_Commerce_System.DTOs.UserDTOs;
 using E_Commerce_System.Models;
 using E_Commerce_System.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -86,7 +87,19 @@ namespace E_Commerce_System.Controllers
             try
             {
                 var cart = HttpContext.Session.GetObjectFromJson<List<(Product product, int quantity)>>("Cart") ?? new List<(Product, int)>();
-                return Ok(cart);
+                List<CartDTO> cartDetails = new List<CartDTO>();
+                foreach (var item in cart)
+                {
+                    CartDTO cartItem = new CartDTO
+                    {
+                        productName = item.product.productName,
+                        quantity = item.quantity,
+                        price = item.product.productPrice * item.quantity
+                    };
+                    cartDetails.Add(cartItem);
+                }
+
+                return Ok(cartDetails);
             }
             catch (Exception ex)
             {
