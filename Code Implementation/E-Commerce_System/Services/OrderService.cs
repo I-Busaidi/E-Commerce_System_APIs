@@ -28,6 +28,10 @@ namespace E_Commerce_System.Services
 
         public (string productName, int quantity, decimal productSum) AddItemToCart(int userId, string productName, int quantity)
         {
+            if (quantity < 1)
+            {
+                throw new ArgumentOutOfRangeException("quantity must be 1 or above");
+            }
             var product = _productService.GetProductByName(productName);
             if (product == null)
             {
