@@ -2,6 +2,7 @@
 using E_Commerce_System.DTOs.ReviewDTOs;
 using E_Commerce_System.Models;
 using E_Commerce_System.Repositories;
+using System.Security.Cryptography.Xml;
 
 namespace E_Commerce_System.Services
 {
@@ -118,6 +119,26 @@ namespace E_Commerce_System.Services
 
             bool checkExistingReview = _reviewRepository.GetReviewsByUserId(userId)
                 .Any(r => r.productId == product.productId);
+
+            var userOrders = _orderService.GetUserOrdersWithRelatedData(userId);
+            if (userOrders == null)
+            {
+                throw new InvalidOperationException("Cannot review products not purchased yet.");
+            }
+            bool userPurchased = false;
+            foreach ( var order in userOrders )
+            {
+                if (order.OrderProducts.Any(op => op.productId == product.productId))
+                {
+                    userPurchased = true;
+                    break;
+                }
+            }
+
+            if (!userPurchased)
+            {
+                throw new InvalidOperationException("Cannot review products not purchased yet.");
+            }
 
             if (checkExistingReview)
             {

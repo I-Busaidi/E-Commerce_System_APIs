@@ -1,4 +1,5 @@
 ﻿using E_Commerce_System.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce_System.Repositories
 {
@@ -13,7 +14,7 @@ namespace E_Commerce_System.Repositories
 
         public IEnumerable<Order> GetAllOrders()
         {
-            return _context.Orders;
+            return _context.Orders.Include(o => o.OrderProducts);
         }
 
         public IEnumerable<Order> GetOrdersByUserId(int id)
